@@ -14,7 +14,7 @@ from time import sleep
 # parametros del pixel
 # from parametros_del_pixel import param_pixel
 
-# Importa toda el modulo parametros_del_pixel pero hay que llamar
+# Importa el modulo parametros_del_pixel completo pero hay que llamar
 # a cada funcion analisis_pixel.funcion()
 import analisis_pixel
 
@@ -59,9 +59,9 @@ for i in range(dimension[0]):
     lambda_file.append(lmb_ch1+(i*resol_ch))
 
 
-datos_pixel = datos_cubo[0:dimension[0], 195, 149]
+datos_pixel = datos_cubo[0:dimension[0], 195, 148]
 
-media2 = sum(lambda_file*datos_pixel)/sum(datos_pixel)
+#media2 = sum(lambda_file*datos_pixel)/sum(datos_pixel)
 a = analisis_pixel.param_pixel(datos_pixel, lambda_file, dimension[0])
 
 
