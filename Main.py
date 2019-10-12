@@ -51,18 +51,28 @@ lmb_ch1 = 6643
 # Solicita al usuario la resolucion por canal
 #resol_ch = input('Ingrese el valor de la resolucion por canal (En Angstrom): ')
 resol_ch = 0.43
-print
+
 # Crea el arreglo de la longitud de onda asociada a cada canal
 # a partir de los valores ingresados por el usuario
 lambda_file = []
 for i in range(dimension[0]):
     lambda_file.append(lmb_ch1+(i*resol_ch))
 
+# Solicita al usuario la coordenada x del pixel a analizar
+# equis=input('Introduzca la coordenada x = ')
+equis = 149
+# Solicita al usuario la coordenada y del pixel a analizar
+# ye=input('Introduzca la coordenada y = ')
+ye = 265
+# Reajusta las coordenadas del pixel de acuerdo al acomodo de ADHOCw
+equis = equis - 1
+ye = dimension[1] - ye
 
-datos_pixel = datos_cubo[0:dimension[0], 195, 148]
 
-#media2 = sum(lambda_file*datos_pixel)/sum(datos_pixel)
+# Carga la informacion del pixel a analizar a la funcion analisis_pixel
+# La forma de ingresar las coordenadas zon z,y,x
+datos_pixel = datos_cubo[0:dimension[0], ye, equis]
+
 a = analisis_pixel.param_pixel(datos_pixel, lambda_file, dimension[0])
-
 
 print a
