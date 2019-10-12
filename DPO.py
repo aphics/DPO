@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from astropy.io import fits
 from scipy import asarray as ar, exp
 from scipy.optimize import curve_fit
-from astropy.table import Table
 from scipy.integrate import quad
 from tqdm import tqdm
 from time import sleep
@@ -18,16 +17,11 @@ from time import sleep
 # a cada funcion analisis_pixel.funcion()
 import analisis_pixel
 
-
-
 plt.style.use(astropy_mpl_style)
 
 
-
-
-
 # Solicta el nombre del archivo FITS
-#cubo_fits = raw_input("Ingresa el nombre del cubo FITS: ")
+# cubo_fits = raw_input("Ingresa el nombre del cubo FITS: ")
 cubo_fits = "cubo.fits"
 # Realiza apertura del archivo FITS (HDU). HDU = Header Data Unity
 hdu_list = fits.open(cubo_fits)
@@ -46,10 +40,10 @@ print("(x,y,z) = (" + str(dimension[2]) + "," + str(dimension[1]) + "," + str(di
 print
 
 # Solicita al usuario el valor de la longitud de onda del primer canal
-#lmb_ch1 = input('Ingrese la longitud de onda del primer canal (En Angstrom): ')
+# lmb_ch1 = input('Ingrese la longitud de onda del primer canal (En Angstrom): ')
 lmb_ch1 = 6643
 # Solicita al usuario la resolucion por canal
-#resol_ch = input('Ingrese el valor de la resolucion por canal (En Angstrom): ')
+# resol_ch = input('Ingrese el valor de la resolucion por canal (En Angstrom): ')
 resol_ch = 0.43
 
 # Crea el arreglo de la longitud de onda asociada a cada canal
