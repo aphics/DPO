@@ -8,7 +8,7 @@ def gauss_fit(x, a, x0, sigma, y0):
 
 
 def gauss_fit_sin_continuo(x, a, x0, sigma):
-    return a * np.exp((-(x - x0) ** 2) / (2 * sigma ** 2))
+    return a * (np.exp((-(x - x0)**2) / (2 * (sigma**2))))
 
 
 def param_pixel(datos_pixel, lambda_file, dimension_z):
@@ -24,25 +24,38 @@ def param_pixel(datos_pixel, lambda_file, dimension_z):
 
         # Condicion inicial para Amplitud
         amplitud_inicial = np.max(datos_pixel)
-        if amplitud_inicial == 0:
-            amplitud_inicial = media_inicial
-
-        # Condicion inicial para lambda central
-        lambda_central_inicial = np.argmax(datos_pixel)
 
         # Ajuste
         try:
-            popt, pcov = curve_fit(gauss_fit, lambda_file, datos_pixel, p0=[media_inicial, lambda_central_inicial, sigma_inicial, 1])
+            # Se ajusta una funcion Gaussiana usando la funcion curve_fit
+            # La variable popt devuelve un arreglo con los parametros del ajuste
+            # La variable pcov devuelve la matriz de covarianza
+            popt, pcov = curve_fit(gauss_fit, lambda_file, datos_pixel, p0=[amplitud_inicial, media_inicial, sigma_inicial, 1])
             amplitud_gaussiana = popt[0]
-            lambda_central = popt[1]
+            lambda_observada = popt[1]
             sigma = popt[2]
             continuo = popt[3]
-            fwhm = 2 * np.sqrt(2*np.log(10))*np.absolute(sigma)
-            mono = quad(gauss_fit_sin_continuo, 1, dim[0], args=(A,X0,desv))
-            mon0 = mono[0]
 
-            return amplitud_gaussiana
+
+            # Se calcula el Full Width at Half Maximum utilizando el valor sigma
+            fwhm = 2 * np.sqrt(2*np.log(10))*np.absolute(sigma)
+
+            # Se calcula el monocromatico usando la funcion quad
+            # La funcion quad devuelve un arreglo donde la primer entrada corresponde
+            # al valor de la integral y la segunda al erro relativo.
+            # Posteriormente se redefine la variable como el valor de la integral
+            mono = quad(gauss_fit_sin_continuo, lambda_file[0], lambda_file[-1], args=(popt[0], lambda_observada, sigma))
+            mono = mono[0]
+
+            # Se calcula la velocidad observada respecto de Halpha
+            velocidad_observada = 299792.458 * ((lambda_observada / 6562.8) - 1)
+
+
+
+            parametros = [amplitud_gaussiana, lambda_observada, sigma, continuo, fwhm, mono, velocidad_observada]
+            return parametros
 
 
         except:
+            print
             print("error en calculo")
