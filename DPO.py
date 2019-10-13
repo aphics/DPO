@@ -1,13 +1,12 @@
 import numpy as np
-from astropy.visualization import astropy_mpl_style
 import matplotlib.pyplot as plt
-
+from astropy.visualization import astropy_mpl_style
 from astropy.io import fits
-from scipy import asarray as ar, exp
-from scipy.optimize import curve_fit
-from scipy.integrate import quad
-from tqdm import tqdm
-from time import sleep
+# from scipy import asarray as ar, exp
+# from scipy.optimize import curve_fit
+# from scipy.integrate import quad
+# from tqdm import tqdm
+# from time import sleep
 
 # Importa unicamente la funcion param_pixel desde el modulo
 # parametros del pixel
@@ -17,7 +16,16 @@ from time import sleep
 # a cada funcion analisis_pixel.funcion()
 import analisis_pixel
 
-plt.style.use(astropy_mpl_style)
+def gauss_fit(x, a, x0, sigma, y0):
+    return y0 + (a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2)))
+
+# Estilos de graficas. Descomentar el estilo deseado
+# plt.style.use(astropy_mpl_style)      # Estilo normal de astropy
+# plt.style.use("dark_background")      # Con fondo negro
+# plt.style.use("Solarize_Light2")      # Estilo amarillento
+# plt.style.use("bmh")                  # Con fondo gris
+plt.style.use("ggplot")               # Con fondo gris
+# plt.style.use("seaborn-poster")       # Estilo de grafica para poster
 
 
 # Solicta el nombre del archivo FITS
@@ -69,4 +77,18 @@ datos_pixel = datos_cubo[0:dimension[0], ye, equis]
 
 a = analisis_pixel.param_pixel(datos_pixel, lambda_file, dimension[0])
 
-print a
+# print a
+
+# observables = [amplitud_gaussiana, lambda_observada, sigma, continuo, fwhm, mono, velocidad_observada]
+# analisis = [ajuste, ajuste_normal, datos_pixel_normal, diferencia_datos_ajuste, diferencia_datos_ajuste_normal, buen_ajuste]
+# parametros = [observables, analisis]
+# Grafica
+
+plt.plot(lambda_file, datos_pixel, 'bo:', label='Senal')
+plt.plot(lambda_file, a[1][0], 'g:', label='Ajuste')
+plt.errorbar(lambda_file, a[1][0], yerr=a[1][3], ecolor='r', elinewidth=1, linewidth=0)
+plt.legend()
+plt.title('Pixel = (' + str(equis + 1) + ',' + str(dimension[1] - ye) + ')')
+plt.xlabel('Lambda')
+plt.ylabel('Senal')
+plt.show()
