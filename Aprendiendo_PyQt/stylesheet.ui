@@ -45,7 +45,7 @@ background-color: orange;
   <widget class="QPushButton" name="boton">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>234</x>
      <y>160</y>
      <width>101</width>
      <height>23</height>
@@ -55,10 +55,10 @@ background-color: orange;
     <string>Enviar</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>36</x>
+     <x>70</x>
      <y>30</y>
      <width>271</width>
      <height>104</height>

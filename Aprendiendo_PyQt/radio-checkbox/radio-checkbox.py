@@ -34,7 +34,7 @@ class Dialogo(QDialog):
             self.labelLenguaje.setText("No ha seleccionado ningun lenguaje")
     
     def checkbox_state(self):
-        self.labelTerminos.setStyleSheet("border: 0")
+        self.labelTerminos.setStyleSheet("color: black")
         if self.checkBox.isChecked():
             self.labelTerminos.setText("Has aceptado los terminos")
             self.labelTerminos.setStyleSheet("color: green")
