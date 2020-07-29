@@ -15,12 +15,12 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QSlider::handle:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b4b4b4, stop:1 #8f8f8f);
-    border: 1px solid #5c5c5c;
-    width: 18px;
-    margin: -15px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
-    border-radius: 3px;
-}</string>
+    background-color: blue
+    }
+
+QSlider::handle:vertical {
+    background-color: green
+    }</string>
   </property>
   <widget class="QSlider" name="horizontalSlider">
    <property name="geometry">
@@ -30,6 +30,9 @@
      <width>160</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="maximum">
+    <number>99</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>

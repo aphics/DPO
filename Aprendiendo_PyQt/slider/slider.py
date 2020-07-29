@@ -22,6 +22,7 @@ class Dialogo(QDialog):
         self.horizontalSlider.setValue(50)
         #detectando cambios en la señal
         self.horizontalSlider.valueChanged.connect(self.getValueHorizontal)
+        self.labelHorizontal.setText("50")
         
         #Vertical slider
         self.verticalSlider.setMinimum(0)
@@ -30,6 +31,7 @@ class Dialogo(QDialog):
         self.verticalSlider.setValue(50)
         #Detectando cambios en la señal
         self.verticalSlider.valueChanged.connect(self.getValueVertical)
+        self.labelVertical.setText("50")
                 
     
     def getValueHorizontal(self):
