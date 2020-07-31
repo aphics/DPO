@@ -14,19 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>320</y>
-      <width>401</width>
-      <height>201</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
@@ -58,7 +45,7 @@
       <string>Cargar pixel</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>12</x>
@@ -215,7 +202,7 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="PrimerCanal">
      <property name="geometry">
       <rect>
        <x>140</x>
@@ -225,7 +212,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="Resolucion">
      <property name="geometry">
       <rect>
        <x>140</x>
@@ -235,6 +222,40 @@
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="MatplotlibWidget11" name="grafica" native="true">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>20</y>
+      <width>500</width>
+      <height>500</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="MatplotlibWidget11" name="imagen" native="true">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>350</width>
+      <height>350</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_imagen">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>666</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Activa si deseas cambiar al pixel haciendo click sobre el.
+No debe estar seleccionada ninguna herramienta de navegacion</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -249,6 +270,14 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MatplotlibWidget11</class>
+   <extends>QWidget</extends>
+   <header location="global">clases_mpl_pyqt5</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
