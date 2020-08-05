@@ -6,8 +6,7 @@ from matplotlib.figure import Figure
 class MplCanvas11(FigureCanvas):
     def __init__(self):
         self.fig = Figure()
-        self.ax = self.fig.add_subplot(111)
-        
+        self.ax = self.fig.add_subplot(111)        
         FigureCanvas.__init__(self, self.fig)
 
 class MatplotlibWidget11(QWidget):
