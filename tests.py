@@ -1,11 +1,23 @@
-from matplotlib import pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
-fig1 = plt.figure(1)
-plt.plot([[1,2], [3, 4]])
-fig2 = plt.figure(2)
-plt.plot([[1,2], [3, 4]])
+from astropy.visualization import (MinMaxInterval, SqrtStretch,
+                                   ImageNormalize)
 
-fig1.set_size_inches(3, 3)
-fig2.set_size_inches(4, 5)
+# Generate a test image
+image = np.arange(65536).reshape((256, 256))
 
+# Create an ImageNormalize object
+norm = ImageNormalize(image, interval=MinMaxInterval(),
+                      stretch=SqrtStretch())
+
+# or equivalently using positional arguments
+# norm = ImageNormalize(image, MinMaxInterval(), SqrtStretch())
+
+# Display the image
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+im = ax.imshow(image, origin='lower', norm=norm)
+fig.colorbar(im)
 plt.show()
+print(fig, ax, im)

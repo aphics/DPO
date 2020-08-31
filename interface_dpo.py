@@ -27,7 +27,7 @@ class VentanaPrincipal(QMainWindow, object):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("interface_dpo.ui", self)
-        self.setMinimumSize(1200,600)
+        self.setMinimumSize(1325,790)
         #Para cargar archivo con boton "Abrir archivo"
         #archivo = self.boton_abrir_archivo.clicked.connect(AbrirArchivoFITS)
         #Se pide al usuario seleccionar el archivo FITS desde el inicio
@@ -39,7 +39,8 @@ class VentanaPrincipal(QMainWindow, object):
         self.cubo = info_FITS[1]
         self.labelNombreArchivo.setText(nombre_cubo)
         self.labelDimensionesArchivo.setText("x: " + str(self.dimensiones_cubo[0]) + ", y: "+ 
-                                                str(self.dimensiones_cubo[1]) + ", z: " + str(self.dimensiones_cubo[2]))
+                                                str(self.dimensiones_cubo[1]) + ", z: " + 
+                                                str(self.dimensiones_cubo[2]))
         self.PrimerCanal.setText('1')
         self.Resolucion.setText('0.43')
         
@@ -78,6 +79,7 @@ class VentanaPrincipal(QMainWindow, object):
         self.maximo.returnPressed.connect(self.umbral_imagen)
 
         self.colormap_imagen.activated.connect(self.umbral_imagen)
+        print(self.imagen)
           
 
     #Para mostrar las coordenadas del pixel cuando el mouse
@@ -128,6 +130,8 @@ class VentanaPrincipal(QMainWindow, object):
             self.px_y = int(self.pixel_y.text())
             # Datos del pixel
             pixel = self.cubo[:, self.px_y, self.px_x]
+            print(pixel)
+            
             # Arreglo lambda para graficar el eje X
             lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(pixel))]
             self.grafica.canvas.ax.clear()
@@ -138,6 +142,7 @@ class VentanaPrincipal(QMainWindow, object):
             self.grafica.canvas.draw()
         except:
             pass
+        
 
     # Evento al momento de cerrar la ventana
     def closeEvent(self, evento):

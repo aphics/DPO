@@ -29,6 +29,7 @@ from time import sleep
 # Definicion de las funciones Guassianas a ajustar
 def gauss_fit(x,a,x0,sigma,y0):
 	return y0+a*np.exp(-(x-x0)**2/(2*sigma**2))
+	# y0+A1*np.exp(-(x-x1)**2/(2*sigma1**2))+A2*np.exp(-(x-x2)**2/(2*sigma2**2))
 def gaussiana(x,A,X0,desv):
 	return A*np.exp((-(x-X0)**2)/(2*desv**2))
 #-----------------------------

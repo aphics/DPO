@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1360</width>
+    <width>1325</width>
     <height>790</height>
    </rect>
   </property>
@@ -255,14 +255,13 @@
      <rect>
       <x>20</x>
       <y>270</y>
-      <width>301</width>
+      <width>251</width>
       <height>51</height>
      </rect>
     </property>
     <property name="text">
-     <string>Activa si deseas cambiar al pixel haciendo click sobre el.
-No debe estar seleccionada ninguna herramienta
- de navegacion</string>
+     <string>Activa si deseas cambiar al pixel haciendo
+click sobre el.</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
@@ -468,13 +467,49 @@ No debe estar seleccionada ninguna herramienta
      </item>
     </widget>
    </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>580</y>
+      <width>83</width>
+      <height>44</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QRadioButton" name="radioButton">
+       <property name="text">
+        <string>RadioButton</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QRadioButton" name="radioButton_2">
+       <property name="text">
+        <string>RadioButton</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLineEdit" name="valores">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>550</y>
+      <width>481</width>
+      <height>191</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1360</width>
+     <width>1325</width>
      <height>21</height>
     </rect>
    </property>
