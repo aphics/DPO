@@ -130,14 +130,14 @@ class VentanaPrincipal(QMainWindow, object):
         self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
         self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
 
-        # if event.xdata == True:
-        self.vis_perfil.canvas.ax.clear()
-        self.vis_perfil.canvas.ax.plot(self.lambda_x, self.pixel_seleccionado)
-        self.vis_perfil.canvas.ax.grid(True)
-        self.vis_perfil.canvas.draw()
+        try:
+            self.vis_perfil.canvas.ax.clear()
+            self.vis_perfil.canvas.ax.plot(self.lambda_x, self.pixel_seleccionado)
+            self.vis_perfil.canvas.ax.grid(True)
+            self.vis_perfil.canvas.draw()
         
-        # else:
-        #     pass
+        except:
+            pass
         
 
     #Para cambiar los canales en la pestana de visualizacion del cubo
