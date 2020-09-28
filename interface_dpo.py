@@ -83,6 +83,9 @@ class VentanaPrincipal(QMainWindow, object):
 
         #Para visualizar perfil del pixel en el modo visualizador del cubo
         self.visualizacion_cubo.canvas.mpl_connect('motion_notify_event', self.vis_perfil_grafica)
+
+        #Para almacenar la informacion del pixel al dar click sobre el pixel
+
         
 
 
@@ -129,16 +132,16 @@ class VentanaPrincipal(QMainWindow, object):
         self.vis_y_coord = int(round(event.ydata, 0))
         self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
         self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
-
         try:
             self.vis_perfil.canvas.ax.clear()
             self.vis_perfil.canvas.ax.plot(self.lambda_x, self.pixel_seleccionado)
             self.vis_perfil.canvas.ax.grid(True)
-            self.vis_perfil.canvas.draw()
-        
+            self.vis_perfil.canvas.draw()        
         except:
-            pass
-        
+            pass     
+
+    #Para almacenar y visualizar la informacion de un pixel al dar click sobre el
+       
 
     #Para cambiar los canales en la pestana de visualizacion del cubo
     def cambiar_canal(self):
