@@ -10,3 +10,24 @@ def onclick(event):
 
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 plt.show()
+
+import pandas as pd
+
+df = pd.DataFrame({'uno': [1, 2, 3], 'tres': [7, 9, 8], 'dos': [4, 5, 6]}, index=['x', 'z', 'y'])
+
+print(df)
+
+print()
+
+# Orden por índice (fila):
+print(df.sort_index())
+
+print()
+
+# Ordenar por índice (columna):
+print(df.sort_index(axis=1, ascending=False))
+
+print()
+
+# Ordenar por los valores de la columna 'tres':
+print(df.sort_values(by='tres', ascending=False))

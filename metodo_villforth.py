@@ -66,30 +66,30 @@ flujo1 = np.array(flujo1)
 flujo2 = np.array(flujo2)
 flujo3 = np.array(flujo3)
 flujo4 = np.array(flujo4)
-print(flujo4, np.diff(flujo4))
+
+flujo = flujo3
 
 
-delta = -5
-R = 0.6
-trans1 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=1)
+delta = -0.10101
+R = 0.99
+trans1 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=1)
 
-trans2 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=2)
-trans3 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=3)
-trans4 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=4)
-trans5 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=5)
-trans6 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=6)
-trans7 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=7)
-trans8 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=8)
-trans9 = twin_peaks(wl=wl, flux=flujo4, delta=delta, R=R, order=9)
-trans10 = twin_peaks(wl=wl, flux=flujo2, delta=delta, R=R, order=10)
-
+trans2 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=2)
+trans3 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=3)
+trans4 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=4)
+trans5 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=5)
+trans6 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=6)
+trans7 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=7)
+trans8 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=8)
+trans9 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=9)
+trans10 = twin_peaks(wl=wl, flux=flujo, delta=delta, R=R, order=10)
 
 
 # print(flujo2, len(flujo1))
 # 
 # print(wl)
 
-plt.plot(wl, flujo2, label="flujo")
+plt.plot(wl, flujo, label="flujo")
 # plt.plot(wl, trans1, label="trans 1")
 # plt.plot(wl, trans2, label="trans 2")
 # plt.plot(wl, trans3, label="trans 3")
@@ -99,9 +99,6 @@ plt.plot(wl, flujo2, label="flujo")
 # plt.plot(wl, trans7, label="trans 7")
 # plt.plot(wl, trans8, label="trans 8")
 # plt.plot(wl, trans9, label="trans 9")
-# plt.plot(wl, trans10, label="trans 10")
+plt.plot(wl, trans10, label="trans 10")
 plt.legend()
 plt.show()
-
-
-
