@@ -1,45 +1,13 @@
-import sys
-from PyQt5.QtWidgets import (QLabel, QRadioButton, QPushButton, QVBoxLayout, QApplication, QWidget)
 
+import matplotlib.pyplot as plt 
+import numpy as np
 
-class basicRadiobuttonExample(QWidget):
+fig, ax = plt.subplots()
+ax.plot(np.random.rand(10))
 
-    def __init__(self):
-        super().__init__()
+def onclick(event):
+    print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
+          ('double' if event.dblclick else 'single', event.button,
+           event.x, event.y, event.xdata, event.ydata))
 
-        self.init_ui()
-
-    def init_ui(self):
-        self.label = QLabel('Which city do you live in?')
-        self.rbtn1 = QRadioButton('New York')
-        self.rbtn2 = QRadioButton('Houston')
-        self.label2 = QLabel("")
-        
-        self.rbtn1.toggled.connect(self.onClicked)
-        self.rbtn2.toggled.connect(self.onClicked)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.rbtn1)
-        layout.addWidget(self.rbtn2)
-        layout.addWidget(self.label2)
-        
-        self.setGeometry(200, 200, 300, 150)
-
-        self.setLayout(layout)
-        self.setWindowTitle('PyQt5 Radio Button Example')
-
-        
-
-        self.show()
-
-    def onClicked(self):
-        radioBtn = self.sender()
-        if radioBtn.isChecked():
-            self.label2.setText("You live in " + radioBtn.text())
-
-
-if __name__ == '__main__':    
-    app = QApplication(sys.argv)
-    ex = basicRadiobuttonExample()
-    sys.exit(app.exec_())
+cid = fig.canvas.mpl_connect('button_press_event', onclick)

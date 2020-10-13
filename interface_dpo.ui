@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1325</width>
-    <height>892</height>
+    <width>1300</width>
+    <height>780</height>
    </rect>
   </property>
   <property name="font">
@@ -27,7 +27,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>10</y>
       <width>250</width>
       <height>70</height>
@@ -104,7 +104,7 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>270</x>
       <y>10</y>
       <width>250</width>
       <height>70</height>
@@ -169,7 +169,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>90</y>
       <width>1281</width>
       <height>651</height>
@@ -184,7 +184,7 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="TabVisualizador">
      <attribute name="title">
       <string>Visualizador del cubo</string>
      </attribute>
@@ -661,8 +661,8 @@
       <widget class="QGroupBox" name="groupBox_11">
        <property name="geometry">
         <rect>
-         <x>200</x>
-         <y>20</y>
+         <x>210</x>
+         <y>15</y>
          <width>80</width>
          <height>80</height>
         </rect>
@@ -699,7 +699,7 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="Tab">
+    <widget class="QWidget" name="TabPerfiles">
      <attribute name="title">
       <string>Perfiles</string>
      </attribute>
@@ -1036,6 +1036,39 @@ click sobre el.</string>
      <attribute name="title">
       <string>Página</string>
      </attribute>
+     <widget class="MatplotlibWidget11" name="grafica_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>500</width>
+        <height>500</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTabWidget" name="tabWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>10</y>
+        <width>571</width>
+        <height>591</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -1044,7 +1077,7 @@ click sobre el.</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1325</width>
+     <width>1300</width>
      <height>21</height>
     </rect>
    </property>

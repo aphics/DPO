@@ -128,17 +128,18 @@ class VentanaPrincipal(QMainWindow, object):
 
     #Funcion para visualizar el perfil del pixel
     def vis_perfil_grafica(self, event):
-        self.vis_x_coord = int(round(event.xdata, 0))
-        self.vis_y_coord = int(round(event.ydata, 0))
-        self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
-        self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
-        try:
+        if event.xdata == None:
+            pass
+        else: 
+            self.vis_x_coord = int(round(event.xdata, 0))
+            self.vis_y_coord = int(round(event.ydata, 0))
+            self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
+            self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
             self.vis_perfil.canvas.ax.clear()
             self.vis_perfil.canvas.ax.plot(self.lambda_x, self.pixel_seleccionado)
             self.vis_perfil.canvas.ax.grid(True)
-            self.vis_perfil.canvas.draw()        
-        except:
-            pass     
+            self.vis_perfil.canvas.draw() 
+            
 
     #Para almacenar y visualizar la informacion de un pixel al dar click sobre el
        
@@ -242,7 +243,6 @@ class VentanaPrincipal(QMainWindow, object):
         if mensaje_cerrar == QMessageBox.Yes: evento.accept()
         else: evento.ignore()
 
-        
 app = QApplication(sys.argv)
 interface_dpo = VentanaPrincipal()
 interface_dpo.show()
