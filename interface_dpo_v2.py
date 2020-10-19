@@ -252,6 +252,7 @@ class VentanaPrincipal(QMainWindow, object):
             self.analisis_perfil.canvas.ax.set_ylabel('Cuentas')
             self.analisis_perfil.canvas.ax.plot(self.lambda_x, pixel)
             self.analisis_perfil.canvas.ax.grid(True)
+            self.analisis_perfil.canvas.ax.tick_params(axis='x',rotation=45)
             self.analisis_perfil.canvas.draw()
         except:
             pass        

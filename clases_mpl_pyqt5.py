@@ -56,6 +56,7 @@ class MplCanvas33(FigureCanvas):
         self.ax5 = self.fig.add_subplot(335)
         self.ax5.get_xaxis().set_visible(False)
         self.ax5.get_yaxis().set_visible(False)
+        # self.ax5.tick_params(labelrotation=45)
         self.ax1 = self.fig.add_subplot(331, sharex = self.ax5, sharey = self.ax5)
         self.ax1.get_xaxis().set_visible(False)
         self.ax2 = self.fig.add_subplot(332, sharex = self.ax5, sharey = self.ax5)
