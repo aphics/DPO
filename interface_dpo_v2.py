@@ -15,7 +15,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import matplotlib
-
+from scipy.optimize import minimize
 import numpy as np
 
 from AbrirFITS import AbrirArchivoFITS
@@ -117,9 +117,14 @@ class VentanaPrincipal(QMainWindow, object):
         # Además cambia a la pestana analisis
         self.boton_analizar.clicked.connect(self.para_analizar)
 
+        # Funcion que busca ajustar
+        self.Ajustar.clicked.connect(self.ajustador)
+
+
     # Funcion que carga el pixel en la pestana de analisis
     # Ademas cambia a la pestana analisis
     def para_analizar(self, event):
+        
         self.pixel_x.setText(self.pixel_x_vis.text())
         self.pixel_y.setText(self.pixel_y_vis.text())
         self.tabPrincipal.setCurrentIndex(1)
@@ -233,29 +238,118 @@ class VentanaPrincipal(QMainWindow, object):
             except :
                 pass
 
-
+    
     # Se carga informacion del pixel             
     def cargarPixel(self):
-        try:
+        # try:
             # if self.pixel_x.text() != '' and self.pixel_y.text() != '' and int(self.PrimerCanal.text()) == int and type(float(self.Resolucion.text())) == float:
             # px_x = self.dimensiones_cubo[0] - int(self.pixel_x.text())
-            self.px_x = int(self.pixel_x.text())
-            # px_y = self.dimensiones_cubo[1] - int(self.pixel_y.text())
-            self.px_y = int(self.pixel_y.text())
-            # Datos del pixel
-            pixel = self.cubo[:, self.px_y, self.px_x]
+        self.px_x = int(self.pixel_x.text())
+        # px_y = self.dimensiones_cubo[1] - int(self.pixel_y.text())
+        self.px_y = int(self.pixel_y.text())
+        # Datos del pixel
+        self.pixel = self.cubo[:, self.px_y, self.px_x]
+        # Arreglo lambda para graficar el eje X
+        self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
+
+
+        self.analisis_perfil.canvas.ax.clear()
+        self.analisis_perfil.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
+        self.analisis_perfil.canvas.ax.set_ylabel('Cuentas')
+        self.analisis_perfil.canvas.ax.plot(self.lambda_x, self.pixel)
+        self.analisis_perfil.canvas.ax.grid(True)
+        self.analisis_perfil.canvas.ax.tick_params(axis='x',rotation=45)
+        self.analisis_perfil.canvas.draw()
+
+        #Para fijar valores minimos y maximos de Amp, media, etc
+        self.Amp_min.setMinimum(min(self.pixel))            
+        self.Amp_min.setMaximum(max(self.pixel))
+        self.Amp_max.setMinimum(min(self.pixel))
+        self.Amp_max.setMaximum(max(self.pixel))
+        self.Media_min.setMinimum(min(self.lambda_x))
+        self.Media_min.setMaximum(max(self.lambda_x))
+        self.Media_max.setMinimum(min(self.lambda_x))
+        self.Media_max.setMaximum(max(self.lambda_x))
+        self.Media_min.setSingleStep(float(self.Resolucion.text()))
+        self.Media_max.setSingleStep(float(self.Resolucion.text()))
+        self.Ncontinuo.setMinimum(1)
+        self.Ncontinuo.setMaximum(self.dimensiones_cubo[2])
+
+        
+        # except:
+        #     pass   
+         
+    # Funcion Gaussiana que se usa para ajustar
+    def fit_gauss(self, x, p):
+        A, mu, sigma = p
+        return( A * np.exp(-(x-mu)*(x-mu)/(2.0*sigma*sigma)) )
+
+    # Funcion que se usa para calcular una chi**2
+    def main_fitter(self, p,x,y,ngauss):
+        chi2 = 0
+        model = np.zeros(np.array(y).shape)
+        split_p = np.split(np.array(p),ngauss)      
+        
+        for g in range(ngauss):
+            gp = split_p[g]
+            if gp[0] <= 0:                  # evita amplitud negativa
+                return 1e10
+            if gp[2] <=0 or gp[2] >= 10:    # Limites en dispersion
+                return 1e10
+            else:
+                model += self.fit_gauss(x,gp)
+
+        chi2 = sum((y-model)**2 )
+        return chi2
+
+    # Funcion usada para ajustar
+    def ajustador(self):
+
+        def plot_total(ptot, x, N):
+            model_tot = np.zeros(np.array(x).shape)
+            split_p = np.split(np.array(ptot),N)            
+            for g in range(N):
+                gp =  split_p[g]
+                model_tot += self.fit_gauss(x,gp)            
+            return model_tot
+
+        self.px_x = int(self.pixel_x.text())
+        self.px_y = int(self.pixel_y.text())
+        self.pixel = self.cubo[:, self.px_y, self.px_x]
+        self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
+        self.valores_para_continuo = float(self.Ncontinuo.value())
+        
+        
+        self.zerolev = np.mean(sorted(self.pixel)[:int(self.valores_para_continuo)])
+        self.pixel = self.pixel - self.zerolev
+        self.iteraciones = int(self.Niter.currentText())
+        self.Results = {}
+
+        for i in range(self.iteraciones):
+            p0 = []
+            for j in range(int(self.Ngauss.value())):
+                p0.append(np.random.uniform(float(self.Amp_min.value()), float(self.Amp_max.value())))      #Amplitud
+                p0.append(np.random.uniform(float(self.Media_min.value()), float(self.Media_max.value())))  #Media
+                p0.append(np.random.uniform(1,10))      # Dispersion           
+            fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False, 'adaptative':True}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
             
-            # Arreglo lambda para graficar el eje X
-            self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(pixel))]
-            self.analisis_perfil.canvas.ax.clear()
-            self.analisis_perfil.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
-            self.analisis_perfil.canvas.ax.set_ylabel('Cuentas')
-            self.analisis_perfil.canvas.ax.plot(self.lambda_x, pixel)
-            self.analisis_perfil.canvas.ax.grid(True)
-            self.analisis_perfil.canvas.ax.tick_params(axis='x',rotation=45)
-            self.analisis_perfil.canvas.draw()
-        except:
-            pass        
+            self.Results[fit.fun] = fit.x
+        
+        best = min(self.Results.keys())
+        best_fit = self.Results[best]
+
+        col = ['red','green','purple','blue']
+        
+        self.analisis_ajuste.canvas.ax.clear()
+
+        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.pixel, '-o', label='datos')
+
+        for i, g in enumerate(np.split(np.array(best_fit),int(self.Ngauss.value()))):
+            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.fit_gauss(self.lambda_x,g), label=f'G{i+1}', color=col[i])
+
+        model_tot = plot_total(best_fit,self.lambda_x,int(self.Ngauss.value()))
+        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, model_tot, color = 'k', ls='--', label='Total')
+        self.analisis_ajuste.canvas.draw()
 
     # Evento al momento de cerrar la ventana
     def closeEvent(self, evento):

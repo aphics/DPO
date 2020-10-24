@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1295</width>
-    <height>780</height>
+    <width>1316</width>
+    <height>788</height>
    </rect>
   </property>
   <property name="font">
@@ -645,20 +645,23 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>3</y>
+        <y>10</y>
         <width>91</width>
         <height>101</height>
        </rect>
       </property>
       <property name="title">
-       <string>Pixel</string>
+       <string/>
       </property>
       <widget class="QPushButton" name="boton_CargarPixel">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>67</y>
-         <width>71</width>
+         <x>11</x>
+         <y>63</y>
+         <width>69</width>
          <height>23</height>
         </rect>
        </property>
@@ -669,14 +672,37 @@ p, li { white-space: pre-wrap; }
         </size>
        </property>
        <property name="text">
-        <string>Cargar pixel</string>
+        <string>Cargar</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLineEdit" name="pixel_x">
        <property name="geometry">
         <rect>
-         <x>13</x>
-         <y>17</y>
+         <x>27</x>
+         <y>11</y>
+         <width>53</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="pixel_y">
+       <property name="geometry">
+        <rect>
+         <x>27</x>
+         <y>37</y>
+         <width>53</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_20">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>11</y>
          <width>16</width>
          <height>16</height>
         </rect>
@@ -688,24 +714,11 @@ p, li { white-space: pre-wrap; }
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLineEdit" name="pixel_x">
+      <widget class="QLabel" name="label_21">
        <property name="geometry">
         <rect>
-         <x>29</x>
-         <y>17</y>
-         <width>41</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_3">
-       <property name="geometry">
-        <rect>
-         <x>13</x>
-         <y>43</y>
+         <x>11</x>
+         <y>37</y>
          <width>16</width>
          <height>16</height>
         </rect>
@@ -717,24 +730,14 @@ p, li { white-space: pre-wrap; }
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLineEdit" name="pixel_y">
-       <property name="geometry">
-        <rect>
-         <x>29</x>
-         <y>43</y>
-         <width>41</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>102</y>
+        <y>110</y>
         <width>521</width>
-        <height>521</height>
+        <height>511</height>
        </rect>
       </property>
       <property name="title">
@@ -746,9 +749,264 @@ p, li { white-space: pre-wrap; }
          <x>10</x>
          <y>10</y>
          <width>500</width>
-         <height>500</height>
+         <height>491</height>
         </rect>
        </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_12">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>10</y>
+        <width>701</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="MatplotlibWidget11" name="analisis_ajuste" native="true">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>500</width>
+         <height>491</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_13">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>10</y>
+        <width>431</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QSpinBox" name="Amp_min">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>12</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>12</y>
+         <width>40</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>N gauss</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="Media_max">
+       <property name="geometry">
+        <rect>
+         <x>345</x>
+         <y>39</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="decimals">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>39</y>
+         <width>53</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Iteraciones</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>283</x>
+         <y>39</y>
+         <width>51</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Media max</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>283</x>
+         <y>12</y>
+         <width>47</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Media min</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_17">
+       <property name="geometry">
+        <rect>
+         <x>158</x>
+         <y>12</y>
+         <width>41</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Amp min</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_18">
+       <property name="geometry">
+        <rect>
+         <x>158</x>
+         <y>39</y>
+         <width>45</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Amp max</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_19">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>66</y>
+         <width>66</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Para continuo</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="Amp_max">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>39</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>116</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Ajustar">
+       <property name="geometry">
+        <rect>
+         <x>345</x>
+         <y>66</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Calcular</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="Media_min">
+       <property name="geometry">
+        <rect>
+         <x>345</x>
+         <y>12</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="decimals">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="Ncontinuo">
+       <property name="geometry">
+        <rect>
+         <x>83</x>
+         <y>67</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="Ngauss">
+       <property name="geometry">
+        <rect>
+         <x>83</x>
+         <y>12</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>4</number>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="Niter">
+       <property name="geometry">
+        <rect>
+         <x>83</x>
+         <y>39</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>10</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>50</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>100</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>150</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>250</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>500</string>
+        </property>
+       </item>
       </widget>
      </widget>
     </widget>
@@ -780,7 +1038,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1295</width>
+     <width>1316</width>
      <height>21</height>
     </rect>
    </property>
@@ -806,13 +1064,10 @@ p, li { white-space: pre-wrap; }
   <tabstop>PrimerCanal</tabstop>
   <tabstop>vista_modo_canal</tabstop>
   <tabstop>Resolucion</tabstop>
-  <tabstop>pixel_y</tabstop>
   <tabstop>limite_cubo</tabstop>
-  <tabstop>boton_CargarPixel</tabstop>
   <tabstop>umbral_cubo</tabstop>
   <tabstop>colormap_cubo</tabstop>
   <tabstop>vis_canal</tabstop>
-  <tabstop>pixel_x</tabstop>
   <tabstop>vista_modo_suma</tabstop>
  </tabstops>
  <resources/>
