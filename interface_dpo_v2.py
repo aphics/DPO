@@ -27,8 +27,8 @@ class VentanaPrincipal(QMainWindow, object):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("interface_dpo_v2.ui", self)
-        self.setMinimumSize(1295,770)
-        self.setMaximumSize(1295,770)
+        self.setMinimumSize(1200,770)
+        self.setMaximumSize(1200,770)
         #Para cargar archivo con boton "Abrir archivo"
         #archivo = self.boton_abrir_archivo.clicked.connect(AbrirArchivoFITS)
         #Se pide al usuario seleccionar el archivo FITS desde el inicio
@@ -120,6 +120,13 @@ class VentanaPrincipal(QMainWindow, object):
         # Funcion que busca ajustar
         self.Ajustar.clicked.connect(self.ajustador)
 
+        # Opciones que permiten graficar de nuevo con zonas sombreadas cada que se 
+        # cambia un paramtero para el ajuste
+        self.Amp_min.valueChanged.connect(self.cargarPixel)
+        self.Amp_max.valueChanged.connect(self.cargarPixel)
+        self.Media_min.valueChanged.connect(self.cargarPixel)
+        self.Media_max.valueChanged.connect(self.cargarPixel)
+
 
     # Funcion que carga el pixel en la pestana de analisis
     # Ademas cambia a la pestana analisis
@@ -151,7 +158,7 @@ class VentanaPrincipal(QMainWindow, object):
                 # Se inicializa con el axes 5 ya que es el pixel central (a estudiar)
                 self.vis_perfil.canvas.ax5.clear()
                 self.vis_perfil.canvas.ax5.plot(self.lambda_x, self.pixel_seleccionado)
-                self.vis_perfil.canvas.ax5.grid(False)
+                self.vis_perfil.canvas.ax5.grid(True)
                 # Se grafican los demas axes (perfiles alrededor)
                 self.vis_perfil.canvas.ax1.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord-1])
                 self.vis_perfil.canvas.ax2.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord])
@@ -161,6 +168,13 @@ class VentanaPrincipal(QMainWindow, object):
                 self.vis_perfil.canvas.ax7.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord-1])
                 self.vis_perfil.canvas.ax8.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord])
                 self.vis_perfil.canvas.ax9.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord+1])
+                self.vis_perfil.canvas.ax1.set_title(str(self.vis_x_coord-1), size=18)
+                self.vis_perfil.canvas.ax1.set_ylabel(str(self.vis_y_coord+1), size=18)
+                self.vis_perfil.canvas.ax2.set_title(str(self.vis_x_coord), size=18)
+                self.vis_perfil.canvas.ax3.set_title(str(self.vis_x_coord-1), size=18)
+                self.vis_perfil.canvas.ax4.set_ylabel(str(self.vis_y_coord), size=18)
+                self.vis_perfil.canvas.ax7.set_ylabel(str(self.vis_y_coord-1), size=18)
+                
                 self.vis_perfil.canvas.draw()
                 self.pixel_x_vis.setText(str(self.vis_x_coord))
                 self.pixel_y_vis.setText(str(self.vis_y_coord))
@@ -170,34 +184,37 @@ class VentanaPrincipal(QMainWindow, object):
     #Funcion para visualizar el perfil del pixel cuando se navega en la imagen    
     def vis_perfil_grafica_libre(self, event):
         if self.modo_libre.isChecked():
-            self.vis_x_coord = int(round(event.xdata, 0))
-            self.vis_y_coord = int(round(event.ydata, 0))
-            self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
-            self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
-            # Se limpian los axes
-            self.vis_perfil.canvas.ax1.clear()
-            self.vis_perfil.canvas.ax2.clear()
-            self.vis_perfil.canvas.ax3.clear()
-            self.vis_perfil.canvas.ax4.clear()
-            self.vis_perfil.canvas.ax5.clear()
-            self.vis_perfil.canvas.ax6.clear()
-            self.vis_perfil.canvas.ax7.clear()
-            self.vis_perfil.canvas.ax8.clear()
-            self.vis_perfil.canvas.ax9.clear()            
-            # Se inicializa con el axes 5 ya que es el pixel central (a estudiar)
-            self.vis_perfil.canvas.ax5.clear()
-            self.vis_perfil.canvas.ax5.plot(self.lambda_x, self.pixel_seleccionado)
-            self.vis_perfil.canvas.ax5.grid(False)
-            # Se grafican los demas axes (perfiles alrededor)
-            self.vis_perfil.canvas.ax1.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord-1])
-            self.vis_perfil.canvas.ax2.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord])
-            self.vis_perfil.canvas.ax3.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord+1])
-            self.vis_perfil.canvas.ax4.plot(self.lambda_x, self.cubo[:, self.vis_y_coord, self.vis_x_coord-1])
-            self.vis_perfil.canvas.ax6.plot(self.lambda_x, self.cubo[:, self.vis_y_coord, self.vis_x_coord+1])
-            self.vis_perfil.canvas.ax7.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord-1])
-            self.vis_perfil.canvas.ax8.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord])
-            self.vis_perfil.canvas.ax9.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord+1])    
-            self.vis_perfil.canvas.draw() 
+            try:
+                self.vis_x_coord = int(round(event.xdata, 0))
+                self.vis_y_coord = int(round(event.ydata, 0))
+                self.pixel_seleccionado = self.cubo[:, self.vis_y_coord, self.vis_x_coord]
+                self.lambda_x = [float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel_seleccionado))]
+                # Se limpian los axes
+                self.vis_perfil.canvas.ax1.clear()
+                self.vis_perfil.canvas.ax2.clear()
+                self.vis_perfil.canvas.ax3.clear()
+                self.vis_perfil.canvas.ax4.clear()
+                self.vis_perfil.canvas.ax5.clear()
+                self.vis_perfil.canvas.ax6.clear()
+                self.vis_perfil.canvas.ax7.clear()
+                self.vis_perfil.canvas.ax8.clear()
+                self.vis_perfil.canvas.ax9.clear()            
+                # Se inicializa con el axes 5 ya que es el pixel central (a estudiar)
+                self.vis_perfil.canvas.ax5.clear()
+                self.vis_perfil.canvas.ax5.plot(self.lambda_x, self.pixel_seleccionado)
+                self.vis_perfil.canvas.ax5.grid(False)
+                # Se grafican los demas axes (perfiles alrededor)
+                self.vis_perfil.canvas.ax1.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord-1])
+                self.vis_perfil.canvas.ax2.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord])
+                self.vis_perfil.canvas.ax3.plot(self.lambda_x, self.cubo[:, self.vis_y_coord+1, self.vis_x_coord+1])
+                self.vis_perfil.canvas.ax4.plot(self.lambda_x, self.cubo[:, self.vis_y_coord, self.vis_x_coord-1])
+                self.vis_perfil.canvas.ax6.plot(self.lambda_x, self.cubo[:, self.vis_y_coord, self.vis_x_coord+1])
+                self.vis_perfil.canvas.ax7.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord-1])
+                self.vis_perfil.canvas.ax8.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord])
+                self.vis_perfil.canvas.ax9.plot(self.lambda_x, self.cubo[:, self.vis_y_coord-1, self.vis_x_coord+1])    
+                self.vis_perfil.canvas.draw() 
+            except:
+                pass
         else:
             pass
                   
@@ -241,43 +258,39 @@ class VentanaPrincipal(QMainWindow, object):
     
     # Se carga informacion del pixel             
     def cargarPixel(self):
-        # try:
-            # if self.pixel_x.text() != '' and self.pixel_y.text() != '' and int(self.PrimerCanal.text()) == int and type(float(self.Resolucion.text())) == float:
-            # px_x = self.dimensiones_cubo[0] - int(self.pixel_x.text())
-        self.px_x = int(self.pixel_x.text())
-        # px_y = self.dimensiones_cubo[1] - int(self.pixel_y.text())
-        self.px_y = int(self.pixel_y.text())
-        # Datos del pixel
-        self.pixel = self.cubo[:, self.px_y, self.px_x]
-        # Arreglo lambda para graficar el eje X
-        self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
+        try:
+                # if self.pixel_x.text() != '' and self.pixel_y.text() != '' and int(self.PrimerCanal.text()) == int and type(float(self.Resolucion.text())) == float:
+                # px_x = self.dimensiones_cubo[0] - int(self.pixel_x.text())
+            self.px_x = int(self.pixel_x.text())
+            # px_y = self.dimensiones_cubo[1] - int(self.pixel_y.text())
+            self.px_y = int(self.pixel_y.text())
+            # Datos del pixel
+            self.pixel = self.cubo[:, self.px_y, self.px_x]
+            # Arreglo lambda para graficar el eje X
+            self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
 
 
-        self.analisis_perfil.canvas.ax.clear()
-        self.analisis_perfil.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
-        self.analisis_perfil.canvas.ax.set_ylabel('Cuentas')
-        self.analisis_perfil.canvas.ax.plot(self.lambda_x, self.pixel)
-        self.analisis_perfil.canvas.ax.grid(True)
-        self.analisis_perfil.canvas.ax.tick_params(axis='x',rotation=45)
-        self.analisis_perfil.canvas.draw()
+            self.analisis_perfil.canvas.ax.clear()
+            self.analisis_perfil.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
+            self.analisis_perfil.canvas.ax.set_ylabel('Cuentas')
+            self.analisis_perfil.canvas.ax.plot(self.lambda_x, self.pixel)
+            self.analisis_perfil.canvas.ax.grid(True)
+            self.analisis_perfil.canvas.ax.tick_params(axis='x',rotation=45)
+            self.analisis_perfil.canvas.ax.axvspan(self.Media_min.value(), self.Media_max.value(), color='blue', alpha = 0.2)
+            self.analisis_perfil.canvas.ax.axhspan(self.Amp_min.value(), self.Amp_max.value(), color='red', alpha = 0.2)
+            self.analisis_perfil.canvas.draw()
 
-        #Para fijar valores minimos y maximos de Amp, media, etc
-        self.Amp_min.setMinimum(min(self.pixel))            
-        self.Amp_min.setMaximum(max(self.pixel))
-        self.Amp_max.setMinimum(min(self.pixel))
-        self.Amp_max.setMaximum(max(self.pixel))
-        self.Media_min.setMinimum(min(self.lambda_x))
-        self.Media_min.setMaximum(max(self.lambda_x))
-        self.Media_max.setMinimum(min(self.lambda_x))
-        self.Media_max.setMaximum(max(self.lambda_x))
-        self.Media_min.setSingleStep(float(self.Resolucion.text()))
-        self.Media_max.setSingleStep(float(self.Resolucion.text()))
-        self.Ncontinuo.setMinimum(1)
-        self.Ncontinuo.setMaximum(self.dimensiones_cubo[2])
-
-        
-        # except:
-        #     pass   
+            #Para fijar valores minimos y maximos de Amp, media, etc
+            self.Amp_min.setRange(min(self.pixel), max(self.pixel))
+            self.Amp_max.setRange(min(self.pixel), max(self.pixel))
+            self.Media_min.setRange(min(self.lambda_x), max(self.lambda_x))
+            self.Media_max.setRange(min(self.lambda_x), max(self.lambda_x))
+            self.Media_min.setSingleStep(float(self.Resolucion.text()))
+            self.Media_max.setSingleStep(float(self.Resolucion.text()))
+            self.Ncontinuo.setMinimum(1)
+            self.Ncontinuo.setMaximum(self.dimensiones_cubo[2])        
+        except:
+            pass   
          
     # Funcion Gaussiana que se usa para ajustar
     def fit_gauss(self, x, p):
@@ -312,44 +325,82 @@ class VentanaPrincipal(QMainWindow, object):
                 gp =  split_p[g]
                 model_tot += self.fit_gauss(x,gp)            
             return model_tot
-
-        self.px_x = int(self.pixel_x.text())
-        self.px_y = int(self.pixel_y.text())
-        self.pixel = self.cubo[:, self.px_y, self.px_x]
-        self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
-        self.valores_para_continuo = float(self.Ncontinuo.value())
         
-        
-        self.zerolev = np.mean(sorted(self.pixel)[:int(self.valores_para_continuo)])
-        self.pixel = self.pixel - self.zerolev
-        self.iteraciones = int(self.Niter.currentText())
-        self.Results = {}
-
-        for i in range(self.iteraciones):
-            p0 = []
-            for j in range(int(self.Ngauss.value())):
-                p0.append(np.random.uniform(float(self.Amp_min.value()), float(self.Amp_max.value())))      #Amplitud
-                p0.append(np.random.uniform(float(self.Media_min.value()), float(self.Media_max.value())))  #Media
-                p0.append(np.random.uniform(1,10))      # Dispersion           
-            fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False, 'adaptative':True}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
+        try:
+            self.px_x = int(self.pixel_x.text())
+            self.px_y = int(self.pixel_y.text())
+            self.pixel = self.cubo[:, self.px_y, self.px_x]
+            self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
+            self.valores_para_continuo = float(self.Ncontinuo.value())
             
-            self.Results[fit.fun] = fit.x
-        
-        best = min(self.Results.keys())
-        best_fit = self.Results[best]
+            
+            self.zerolev = np.mean(sorted(self.pixel)[:int(self.valores_para_continuo)])
+            self.pixel = self.pixel - self.zerolev
+            self.iteraciones = int(self.Niter.currentText())
+            self.Results = {}
 
-        col = ['red','green','purple','blue']
-        
-        self.analisis_ajuste.canvas.ax.clear()
+            # Fijamos el valor maximo para la barra de progreso dependiendo del numero de iteraciones
+            self.progressBar.setMaximum(self.iteraciones-1)
 
-        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.pixel, '-o', label='datos')
+            for i in range(self.iteraciones):
+                p0 = []
+                for j in range(int(self.Ngauss.value())):
+                    p0.append(np.random.uniform(float(self.Amp_min.value()), float(self.Amp_max.value())))      #Amplitud
+                    p0.append(np.random.uniform(float(self.Media_min.value()), float(self.Media_max.value())))  #Media
+                    p0.append(np.random.uniform(1,10))      # Dispersion           
+                # fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False, 'adaptative':True}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
+                
+                fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
+                
+                self.Results[fit.fun] = fit.x
 
-        for i, g in enumerate(np.split(np.array(best_fit),int(self.Ngauss.value()))):
-            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.fit_gauss(self.lambda_x,g), label=f'G{i+1}', color=col[i])
+                # Se actualiza el valor de la barra de progreso
+                self.progressBar.setValue(i)
+            
+            best = min(self.Results.keys())
+            best_fit = self.Results[best]
+            # print(best_fit)
 
-        model_tot = plot_total(best_fit,self.lambda_x,int(self.Ngauss.value()))
-        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, model_tot, color = 'k', ls='--', label='Total')
-        self.analisis_ajuste.canvas.draw()
+            col = ['red','green','purple','blue']
+            
+            self.analisis_ajuste.canvas.ax.clear()
+
+            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.pixel, '-o', label='datos')
+
+            for i, g in enumerate(np.split(np.array(best_fit),int(self.Ngauss.value()))):
+                self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.fit_gauss(self.lambda_x,g), label=f'G{i+1}', color=col[i])
+
+            model_tot = plot_total(best_fit,self.lambda_x,int(self.Ngauss.value()))
+            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, model_tot, color = 'k', ls='--', label='Total')
+            self.analisis_ajuste.canvas.ax.tick_params(axis='x',rotation=45)
+            self.analisis_ajuste.canvas.ax.grid(True)
+            self.analisis_ajuste.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
+            self.analisis_ajuste.canvas.ax.set_ylabel('Cuentas')
+            self.analisis_ajuste.canvas.draw()
+
+            # Para mostrar los parametros del ajuste en la interface
+            # Primero se hace split en el arreglo que contiene los parametros
+            # tambien ayuda para saber cuantas gaussianas se ajustaron
+            self.parametros = np.split(best_fit, self.Ngauss.value())
+            # Se crean listas con los QLineEdit de los parametros
+            self.amplitudes = [self.a1, self.a2, self.a3, self.a4]
+            self.medias = [self.m1, self.m2, self.m3, self.m4]
+            self.dispersiones = [self.d1, self.d2, self.d3, self.d4]
+
+            # Los QLineEdit debe de borrarse primero
+            for i in range(4):
+                self.amplitudes[i].setText('')
+                self.medias[i].setText('')
+                self.dispersiones[i].setText('')
+
+            # Se muestran en los QLineEdit los valores de los parametros
+            for i, pars in enumerate(self.parametros):
+                self.amplitudes[i].setText(str(format(pars[0], '0.2f')))
+                self.medias[i].setText(str(format(pars[1], '0.2f')))
+                self.dispersiones[i].setText(str(format(pars[2], '0.2f')))
+        except:
+            pass
+                
 
     # Evento al momento de cerrar la ventana
     def closeEvent(self, evento):

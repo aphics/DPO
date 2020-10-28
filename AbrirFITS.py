@@ -38,7 +38,7 @@ class AbrirArchivoFITS(QWidget, object):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        self.fileName, _ = QFileDialog.getOpenFileName(self,"Abrir cubo de datos FITS", "","Imagen FITS(*.fits)", options=options)
+        self.fileName, _ = QFileDialog.getOpenFileName(self,"Seleccione un cubo de datos FITS", "","Imagen FITS(*.fits)", options=options)
     
     def Archivo(self):
         #Apertura del archivo FITS

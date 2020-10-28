@@ -75,7 +75,7 @@ class MplCanvas33(FigureCanvas):
         self.ax8.get_yaxis().set_visible(False)
         self.ax9 = self.fig.add_subplot(339, sharex = self.ax5, sharey = self.ax5)
         self.ax9.get_yaxis().set_visible(False)        
-        self.fig.subplots_adjust(hspace=0, wspace=0, left=0.08, right=.92, top=.92, bottom=0.08)
+        self.fig.subplots_adjust(hspace=0, wspace=0, left=0.12, right=.92, top=.92, bottom=0.08)
         FigureCanvas.__init__(self, self.fig)
 
 class MatplotlibWidget33_visual(QWidget):
@@ -87,8 +87,3 @@ class MatplotlibWidget33_visual(QWidget):
         self.vbl.addWidget(self.toolbar)
         self.vbl.addWidget(self.canvas)
         self.setLayout(self.vbl)
-
-
-
-
-
