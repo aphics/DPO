@@ -326,80 +326,83 @@ class VentanaPrincipal(QMainWindow, object):
                 model_tot += self.fit_gauss(x,gp)            
             return model_tot
         
-        try:
-            self.px_x = int(self.pixel_x.text())
-            self.px_y = int(self.pixel_y.text())
-            self.pixel = self.cubo[:, self.px_y, self.px_x]
-            self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
-            self.valores_para_continuo = float(self.Ncontinuo.value())
+        # try:
+        self.px_x = int(self.pixel_x.text())
+        self.px_y = int(self.pixel_y.text())
+        self.pixel = self.cubo[:, self.px_y, self.px_x]
+        self.lambda_x = [ float(self.PrimerCanal.text()) + n*float(self.Resolucion.text()) for n in range(len(self.pixel))]
+        self.valores_para_continuo = float(self.Ncontinuo.value())
+        
+        
+        self.zerolev = np.mean(sorted(self.pixel)[:int(self.valores_para_continuo)])
+        self.pixel = self.pixel - self.zerolev
+        self.iteraciones = int(self.Niter.currentText())
+        self.Results = {}
+
+        # Fijamos el valor maximo para la barra de progreso dependiendo del numero de iteraciones
+        self.progressBar.setMaximum(self.iteraciones-1)
+
+        for i in range(self.iteraciones):
+            p0 = []
+            for j in range(int(self.Ngauss.value())):
+                p0.append(np.random.uniform(float(self.Amp_min.value()), float(self.Amp_max.value())))      #Amplitud
+                p0.append(np.random.uniform(float(self.Media_min.value()), float(self.Media_max.value())))  #Media
+                p0.append(np.random.uniform(1,10))      # Dispersion           
+            # fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False, 'adaptative':True}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
             
+            fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
             
-            self.zerolev = np.mean(sorted(self.pixel)[:int(self.valores_para_continuo)])
-            self.pixel = self.pixel - self.zerolev
-            self.iteraciones = int(self.Niter.currentText())
-            self.Results = {}
+            self.Results[fit.fun] = fit.x
 
-            # Fijamos el valor maximo para la barra de progreso dependiendo del numero de iteraciones
-            self.progressBar.setMaximum(self.iteraciones-1)
+            # Se actualiza el valor de la barra de progreso
+            self.progressBar.setValue(i)
+        
+        best = min(self.Results.keys())
+        best_fit = self.Results[best]
+        # print(best_fit)
 
-            for i in range(self.iteraciones):
-                p0 = []
-                for j in range(int(self.Ngauss.value())):
-                    p0.append(np.random.uniform(float(self.Amp_min.value()), float(self.Amp_max.value())))      #Amplitud
-                    p0.append(np.random.uniform(float(self.Media_min.value()), float(self.Media_max.value())))  #Media
-                    p0.append(np.random.uniform(1,10))      # Dispersion           
-                # fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False, 'adaptative':True}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
-                
-                fit = minimize(self.main_fitter, p0, method='Powell', options={'maxiter':15000, 'maxfev':15000, 'disp': False}, args=(self.lambda_x, self.pixel, int(self.Ngauss.value())))
-                
-                self.Results[fit.fun] = fit.x
+        col = ['red','green','purple','blue']
+        
+        self.analisis_ajuste.canvas.ax.clear()
 
-                # Se actualiza el valor de la barra de progreso
-                self.progressBar.setValue(i)
-            
-            best = min(self.Results.keys())
-            best_fit = self.Results[best]
-            # print(best_fit)
+        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.pixel+ self.zerolev, '-o', label='datos')
 
-            col = ['red','green','purple','blue']
-            
-            self.analisis_ajuste.canvas.ax.clear()
+        for i, g in enumerate(np.split(np.array(best_fit),int(self.Ngauss.value()))):
+            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.fit_gauss(self.lambda_x,g) + self.zerolev, label=f'G{i+1}', color=col[i])
 
-            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.pixel, '-o', label='datos')
+        model_tot = plot_total(best_fit,self.lambda_x,int(self.Ngauss.value()))
+        self.analisis_ajuste.canvas.ax.plot(self.lambda_x, model_tot + self.zerolev, color = 'k', ls='--', label='Total')
+        self.analisis_ajuste.canvas.ax.tick_params(axis='x',rotation=45)
+        self.analisis_ajuste.canvas.ax.grid(True)
+        self.analisis_ajuste.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
+        self.analisis_ajuste.canvas.ax.set_ylabel('Cuentas')
+        self.analisis_ajuste.canvas.draw()
 
-            for i, g in enumerate(np.split(np.array(best_fit),int(self.Ngauss.value()))):
-                self.analisis_ajuste.canvas.ax.plot(self.lambda_x, self.fit_gauss(self.lambda_x,g), label=f'G{i+1}', color=col[i])
+        # Para mostrar los parametros del ajuste en la interface
+        # Primero se hace split en el arreglo que contiene los parametros
+        # tambien ayuda para saber cuantas gaussianas se ajustaron
+        self.parametros = np.split(best_fit, self.Ngauss.value())
+        # Se crean listas con los QLineEdit de los parametros
+        self.amplitudes = [self.a1, self.a2, self.a3, self.a4]
+        self.medias = [self.m1, self.m2, self.m3, self.m4]
+        self.dispersiones = [self.d1, self.d2, self.d3, self.d4]
 
-            model_tot = plot_total(best_fit,self.lambda_x,int(self.Ngauss.value()))
-            self.analisis_ajuste.canvas.ax.plot(self.lambda_x, model_tot, color = 'k', ls='--', label='Total')
-            self.analisis_ajuste.canvas.ax.tick_params(axis='x',rotation=45)
-            self.analisis_ajuste.canvas.ax.grid(True)
-            self.analisis_ajuste.canvas.ax.set_xlabel('Longitud de onda (Angstrom)')
-            self.analisis_ajuste.canvas.ax.set_ylabel('Cuentas')
-            self.analisis_ajuste.canvas.draw()
+        # Los QLineEdit debe de borrarse primero
+        for i in range(4):
+            self.amplitudes[i].setText('')
+            self.medias[i].setText('')
+            self.dispersiones[i].setText('')
 
-            # Para mostrar los parametros del ajuste en la interface
-            # Primero se hace split en el arreglo que contiene los parametros
-            # tambien ayuda para saber cuantas gaussianas se ajustaron
-            self.parametros = np.split(best_fit, self.Ngauss.value())
-            # Se crean listas con los QLineEdit de los parametros
-            self.amplitudes = [self.a1, self.a2, self.a3, self.a4]
-            self.medias = [self.m1, self.m2, self.m3, self.m4]
-            self.dispersiones = [self.d1, self.d2, self.d3, self.d4]
+        
+        c = 299792.458          # Velocidad de la luz en km/s
 
-            # Los QLineEdit debe de borrarse primero
-            for i in range(4):
-                self.amplitudes[i].setText('')
-                self.medias[i].setText('')
-                self.dispersiones[i].setText('')
-
-            # Se muestran en los QLineEdit los valores de los parametros
-            for i, pars in enumerate(self.parametros):
-                self.amplitudes[i].setText(str(format(pars[0], '0.2f')))
-                self.medias[i].setText(str(format(pars[1], '0.2f')))
-                self.dispersiones[i].setText(str(format(pars[2], '0.2f')))
-        except:
-            pass
+        # Se muestran en los QLineEdit los valores de los parametros
+        for i, pars in enumerate(self.parametros):
+            self.amplitudes[i].setText( str(format(pars[0], '0.2f')) )
+            self.medias[i].setText(str(format(pars[1], '0.2f')))
+            self.dispersiones[i].setText( str(format(pars[2], '0.2f')) + str(' nm') + str( format(c/pars[2], '0.2f') ))
+        # except:
+        #     pass
                 
 
     # Evento al momento de cerrar la ventana
