@@ -8,10 +8,10 @@ def gauss(x, A, mu, sigma):
     return gauss_
 
 x = np.linspace(1, 48, 48)
-A1 = 30
+A1 = 150
 mu1 = 24
 sigma1 = 2.3
-A2 = 45
+A2 = 245
 mu2 = 28
 sigma2 = 1.8
 
@@ -21,6 +21,7 @@ g2 = gauss(x, A2, mu2, sigma2)
 ruido_artificial = np.random.normal(0, 2, x.shape) 
 y = g1 + g2 + ruido_artificial + 50
 y2 = g1 + g2
+y = np.random.uniform(50, 10, x.shape)
 y = list( round(i,2) for i in y)
 # print(y) 
 
@@ -146,17 +147,9 @@ senal_2 = senal_2-continuo_2
 senal_sum = np.mean(senal_2)
 print("senal suma: ", senal_sum)
 # Calculo de la desviacion estandar de ruido_2
-sigma_ruido_2 = np.sqrt( (1/(len(ruido_2)-1)) * np.sum( (ruido_2 - np.mean(ruido_2))**2 ))
-
-sum_dif = 0
-mu_ruido_2 = np.mean(ruido_2)
-for i in range(len(ruido_2)):
-    sum_dif = sum_dif + ( ruido_2[i] - mu_ruido_2 )**2
-sigma2 = np.sqrt( (1/(len(ruido_2)-1)) * sum_dif )
-
-
+sigma_ruido_2 = np.std(ruido_2, ddof = 1)
 print("Sigma ruido 2: ", sigma_ruido_2)
-print("sigma 2: ", sigma2)
+# print("sigma 2: ", sigma2)
 print("senal a ruido ratio: ", senal_sum/sigma_ruido_2)
 
 
@@ -164,17 +157,17 @@ print("senal a ruido ratio: ", senal_sum/sigma_ruido_2)
 
 
 
-plt.plot(x, g1 + 50, label="G1")
-plt.plot(x, g2 + 50, label="G2")
+# plt.plot(x, g1 + 50, label="G1")
+# plt.plot(x, g2 + 50, label="G2")
 # plt.plot(x, ruido_artificial, label="Ruido artificial")
 plt.plot(x, y, '.-', label="Datos")
 # plt.plot(x, senal_1_array, label="Senal 1")
 # plt.plot(x, ruido_1_array, label ="Ruido 1")
-# plt.plot(x, np.full_like(x, promedio), label="Promedio" )
+plt.plot(x, np.full_like(x, promedio), label="Promedio" )
 # plt.plot(x, np.full_like(x, continuo_1), label="Cont 1" )
 # plt.plot(x, np.full_like(x, continuo_1+sigma_continuo_1), label="Cont 1 + sigma 1")
 plt.plot(x, np.full_like(y, continuo_2), label="Continuo real")
-# plt.plot(x, senal_2_array, label="senal 2")
+plt.plot(x, senal_2_array, '.', label="senal 2")
 # plt.plot(x, ruido_2_array, label="ruido 2")
 plt.legend()
 plt.show()
