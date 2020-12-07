@@ -12,7 +12,7 @@ from PyQt5 import uic
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
+# from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import matplotlib
 from scipy.optimize import minimize
@@ -20,6 +20,8 @@ import numpy as np
 
 from AbrirFITS import AbrirArchivoFITS
 from senal_ruido import buscador
+
+from matplotlib.patches import Rectangle
 
 print(matplotlib.__version__)
 
@@ -39,7 +41,6 @@ class VentanaPrincipal(QMainWindow, object):
         self.dimensiones_cubo = info_FITS[0][::-1]
         nombre_cubo = info_FITS[2][::-1].split('/')[0][::-1]
         self.cubo = info_FITS[1]
-        print(np.ma.max(self.cubo))
         self.labelNombreArchivo.setText(nombre_cubo)
         self.labelDimensionesArchivo.setText("x: " + str(self.dimensiones_cubo[0]) + ", y: "+ 
                                                 str(self.dimensiones_cubo[1]) + ", z: " + 
@@ -134,6 +135,10 @@ class VentanaPrincipal(QMainWindow, object):
                 
     #Funcion para visualizar el perfil del pixel cuando se da click en un pixel
     def vis_perfil_grafica_click(self, event):
+        try:
+            self.rect = []
+        except:
+            pass
         if self.modo_click.isChecked():
             for x in range(1,3):
                 self.vis_x_coord = int(round(event.xdata, 0))
@@ -173,6 +178,7 @@ class VentanaPrincipal(QMainWindow, object):
                 self.vis_perfil.canvas.draw()
                 self.pixel_x_vis.setText(str(self.vis_x_coord))
                 self.pixel_y_vis.setText(str(self.vis_y_coord))
+                self.rect = self.visualizacion_cubo.canvas.ax.add_patch( Rectangle((self.vis_x_coord-0.5, self.vis_y_coord-0.5), 1, 1, ec='r'))
         else:
             pass
     
